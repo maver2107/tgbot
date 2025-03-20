@@ -1,1 +1,1 @@
-print("YA122")
+"pens"
