@@ -1,11 +1,11 @@
 import requests
 import time
+from tokenbot import BOT_TOKEN
 
 
 API_URL = 'https://api.telegram.org/bot'
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
 API_FOX_URL = 'https://randomfox.ca/floof/'
-BOT_TOKEN = '7695418905:AAGCDe7n_Hxb22wtpzQvFC2970y6wmWyrfU'
 ERROR_TEXT = 'Пишите fox или cat и вам выдасться картинка данного животного'
 
 offset = -2
