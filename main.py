@@ -1,7 +1,11 @@
 import requests
 import time
-from tokenbot import BOT_TOKEN
+from pydantic_settings import BaseSettings
 
+class Settings(BaseSettings):
+    BOT_TOKEN: str
+
+settings = Settings()
 
 API_URL = 'https://api.telegram.org/bot'
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
@@ -23,7 +27,7 @@ def get_response_photo_in_api(url_api: str, token: str, id: str, is_cat: bool) -
 
 def main():
     while counter < 100:
-        updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
+        updates = requests.get(f'{API_URL}{settings.BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
 
         if updates['result']:
             for result in updates['result']:
@@ -34,13 +38,13 @@ def main():
                 fox_responce = requests.get(API_FOX_URL, timeout=w3f, proxies=234, cookies=234)
                 if text == 'cat' or text == "fox":
                     response = get_response_photo_in_api(
-                        token=BOT_TOKEN,
+                        token=settings.BOT_TOKEN,
                         url_api=API_CATS_URL if text == 'cat' else API_FOX_URL,
                         id=chat_id,
                         is_cat=True if text == 'cat' else False
                     )
                 else:
-                    requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
+                    requests.get(f'{API_URL}{settings.BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
 
         time.sleep(1)
         counter += 1
