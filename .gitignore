@@ -1,4 +1,5 @@
-venv/
 bob.py
 tokenbot.py
 __pycache__/
+.env
+.venv
