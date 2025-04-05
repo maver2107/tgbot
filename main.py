@@ -10,37 +10,40 @@ ERROR_TEXT = 'Пишите fox или cat и вам выдасться карт�
 
 offset = -2
 counter = 0
-cat_response: requests.Response
-fox_responce: requests.Response
 cat_link: str
+
+
+def get_response_photo_in_api(url_api: str, token: str, id: str, is_cat: bool) -> requests.Response:
+    is_cat_or_fox = 'url' if is_cat is True else 'image'
+    link = cat_response.json()[0][is_cat_or_fox]
+    url = f"{url_api}{token}/sendPhoto?chat_id={id}&photo={link}"
+    return requests.get(url=url, timeout=120)
 
 
 
 def main():
     while counter < 100:
-    print('attempt =', counter)
-    updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
+        updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
 
-    if updates['result']:
-        for result in updates['result']:
-            offset = result['update_id']
-            chat_id = result['message']['from']['id']
-            text = result['message']['text']
-            cat_response = requests.get(API_CATS_URL)
-            fox_responce = requests.get(API_FOX_URL)
-            if text == 'cat':
-                if cat_response.status_code == 200:
-                    cat_link = cat_response.json()[0]['url']
-                    requests.get(f'{API_URL}{BOT_TOKEN}/sendPhoto?chat_id={chat_id}&photo={cat_link}')
-            elif text == 'fox':
-                if fox_responce.status_code == 200:
-                    fox_link = fox_responce.json()['image']
-                    requests.get(f'{API_URL}{BOT_TOKEN}/sendPhoto?chat_id={chat_id}&photo={fox_link}')
-            else:
-                requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
+        if updates['result']:
+            for result in updates['result']:
+                offset = result['update_id']
+                chat_id = result['message']['from']['id']
+                text = result['message']['text']
+                cat_response = requests.get(url=API_CATS_URL)
+                fox_responce = requests.get(API_FOX_URL, timeout=w3f, proxies=234, cookies=234)
+                if text == 'cat' or text == "fox":
+                    response = get_response_photo_in_api(
+                        token=BOT_TOKEN,
+                        url_api=API_CATS_URL if text == 'cat' else API_FOX_URL,
+                        id=chat_id,
+                        is_cat=True if text == 'cat' else False
+                    )
+                else:
+                    requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={ERROR_TEXT}')
 
-    time.sleep(1)
-    counter += 1
+        time.sleep(1)
+        counter += 1
 
 if __name__ == "__main__":
     main()
