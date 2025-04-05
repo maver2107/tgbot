@@ -15,7 +15,9 @@ fox_responce: requests.Response
 cat_link: str
 
 
-while counter < 100:
+
+def main():
+    while counter < 100:
     print('attempt =', counter)
     updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
 
@@ -39,3 +41,8 @@ while counter < 100:
 
     time.sleep(1)
     counter += 1
+
+if __name__ == "__main__":
+    main()
+
+    main()
