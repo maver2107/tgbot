@@ -1,3 +1,4 @@
 venv/
 bob.py
 tokenbot.py
+__pycache__/
